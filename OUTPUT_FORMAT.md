@@ -1,15 +1,19 @@
 # Output Format — `brand-system/` Folder
 
-This is the contract for Phase 3 of the brand-system skill. Every brand generated must produce a folder containing exactly these six files. Each file's structure is fixed; the *content* is shaped by the chosen direction.
+This is the contract for Phase 3 of the brand-system skill. Every brand generated must produce a folder containing exactly these ten files. Each file's structure is fixed; the *content* is shaped by the chosen direction.
 
 ```
 brand-system/
 ├── README.md          # Index + how to use
 ├── palette.json       # Semantic color tokens
 ├── type.css           # Type scale + ready-to-paste classes
+├── space.css          # Spacing scale + layout primitives + radius
+├── logo.md            # Wordmark spec + clear-space + monogram
 ├── tone.md            # Voice attributes + do/don't + microcopy
 ├── imagery.md         # Reference scene system + 8-10 prompts
-└── moodboard.html     # Composed visual moodboard
+├── accessibility.md   # WCAG contrast report (computed)
+├── moodboard.html     # Composed visual moodboard
+└── applications.html  # System rendered on 4 real surfaces
 ```
 
 ---
@@ -322,6 +326,213 @@ This is the Phase-2 preview format, *upgraded* with all artifacts in place. Open
 
 ---
 
+## 7. `space.css`
+
+Spacing tokens, layout primitives, and radius/shadow scales. Imports `type.css` so a single `<link rel="stylesheet" href="space.css">` brings the whole system. Every value uses `clamp()`.
+
+```css
+/* ============================================================
+   {Brand Name} — Spacing & Layout
+   Direction: {Direction Name}
+   ============================================================ */
+
+@import url('./type.css');
+
+:root {
+    /* === SPACING — modular, clamp-based === */
+    --space-0:  0;
+    --space-1:  clamp(0.25rem, 0.5vw, 0.375rem);
+    --space-2:  clamp(0.5rem,  1vw,   0.75rem);
+    --space-3:  clamp(0.75rem, 1.5vw, 1rem);
+    --space-4:  clamp(1rem,    2vw,   1.5rem);
+    --space-5:  clamp(1.5rem,  3vw,   2rem);
+    --space-6:  clamp(2rem,    4vw,   3rem);
+    --space-8:  clamp(2.5rem,  5vw,   4rem);
+    --space-10: clamp(3rem,    6vw,   5rem);
+    --space-12: clamp(4rem,    8vw,   7rem);
+
+    /* === LAYOUT === */
+    --content-max:    72ch;
+    --container-max:  1280px;
+    --gutter:         var(--space-5);
+    --section-gap:    var(--space-10);
+
+    /* === RADIUS — pick a direction-specific personality === */
+    /* Sharp/technical: 0, 2px, 4px */
+    /* Editorial: 4px, 8px, 16px */
+    /* Playful: 8px, 16px, 999px */
+    --radius-sm: {value};
+    --radius-md: {value};
+    --radius-lg: {value};
+
+    /* === SHADOW — used sparingly, never as default === */
+    --shadow-low:  0 1px 2px rgba(0,0,0,0.04);
+    --shadow-mid:  0 4px 12px rgba(0,0,0,0.08);
+}
+
+.container {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+
+.stack > * + * { margin-top: var(--space-4); }
+.stack-tight > * + * { margin-top: var(--space-2); }
+.stack-loose > * + * { margin-top: var(--space-6); }
+```
+
+**Rules:**
+- Spacing scale uses Fibonacci-like progression (1, 2, 3, 4, 5, 6, 8, 10, 12) — never include all numbers.
+- Radius scale must reflect the direction's personality. Sharp/technical directions use 0-4px; editorial uses 4-16px; playful uses up to 999px (pills).
+- Shadow tokens exist but the system should rarely reach for them. Default to no shadow unless the direction explicitly calls for it.
+
+---
+
+## 8. `logo.md`
+
+Wordmark specification. Brand systems without a logo spec feel half-finished — every consumer of the brand needs to know how to set the name, what to do at favicon scale, and what NOT to do.
+
+```markdown
+# Wordmark — {Brand Name}
+
+## Primary lockup
+The wordmark sets **{Brand Name}** in **{display font}** {weight} at **{tracking}**.
+Single line; no inline glyphs, dashes, or "presents:" treatments.
+
+```html
+<span class="wordmark">{Brand Name}</span>
+```
+```css
+.wordmark {
+    font-family: var(--font-display);
+    font-weight: {weight};
+    letter-spacing: {tracking};
+    color: var(--ink);
+}
+```
+
+## Clear space
+Minimum clear space around the wordmark = **the height of one capital letter** (cap-height) on all four sides. Treat this as the no-fly zone. Never let other elements cross it.
+
+## Minimum size
+| Context | Minimum |
+| --- | --- |
+| Digital | {16px height} |
+| Print | {12pt height} |
+| Below minimum | Use the **monogram** instead |
+
+## Monogram (icon-only fallback)
+The single character or initials that stand in for the wordmark when the full lockup won't read. Used in: favicons, podcast platform icons, social avatars, app tile icons.
+
+**Glyph:** {single character or initials}
+**Set in:** {display font} {weight}
+**Lockup:** Centered in a {ground / signal / ink} square. Optical centering — visually centered, not pixel-centered.
+
+## Color usage
+- **Primary (light):** ink on ground
+- **Reverse (dark):** ground on ink
+- **On signal background:** ground (never ink-on-signal — fails contrast)
+- **Single-color print:** ink only — never tint, never multi-color the wordmark
+
+## Don't
+- Don't stretch, condense, or skew
+- Don't apply drop shadows, glows, or outlines
+- Don't rotate or place on a curve
+- Don't combine with other typefaces inline
+- Don't recolor the wordmark with non-system colors
+- Don't place over a busy photograph without a solid backplate
+```
+
+**Rules:**
+- Provide both the visual spec and the CSS recipe. Designers and engineers are both consumers.
+- Clear-space, minimum size, and monogram are **mandatory** sections. A logo spec without these is incomplete.
+- Color usage must call out which combinations fail accessibility (e.g., "never ink on signal").
+- Don't list must be 5+ specific bans — generic "don't misuse" is useless.
+
+---
+
+## 9. `accessibility.md`
+
+Computed WCAG contrast report. The skill must mathematically compute each ratio, not estimate. Use the standard formula:
+- sRGB → linear RGB (gamma 2.4)
+- Relative luminance L = 0.2126·R + 0.7152·G + 0.0722·B
+- Contrast ratio = (L_lighter + 0.05) / (L_darker + 0.05)
+
+**WCAG thresholds:**
+- AA body text: 4.5:1
+- AA large text (18pt+ / 14pt+ bold): 3:1
+- AAA body text: 7:1
+- AAA large text: 4.5:1
+
+```markdown
+# Accessibility — {Brand Name}
+
+## WCAG contrast — every text-on-background pair
+
+| Foreground | Background | Ratio | Body AA | Large AA | Notes |
+| --- | --- | --- | --- | --- | --- |
+| ink {hex} | ground {hex} | {x.x:1} | ✅/❌ | ✅/❌ | Primary body text |
+| ink-soft {hex} | ground {hex} | {x.x:1} | ✅/❌ | ✅/❌ | Secondary text |
+| signal {hex} | ground {hex} | {x.x:1} | ✅/❌ | ✅/❌ | {role — body text or decorative-only} |
+| signal {hex} | ink {hex} | {x.x:1} | ✅/❌ | ✅/❌ | Signal on dark surfaces |
+| ground {hex} | ink {hex} | {x.x:1} | ✅/❌ | ✅/❌ | Reverse / dark mode body |
+| ... (all combinations) |
+
+## Decorative-only colors
+Colors that fail body AA on the page background. **Never set text in these colors on `ground`.** Use them for shapes, accents, dividers, focus rings, or only on darker surfaces where they pass.
+
+- {token name} — fails on ground; passes on ink → use only on dark surfaces
+
+## Focus ring
+2px solid {signal token} with 2px outline-offset. Visible always. Never `outline: none` without a replacement.
+
+## Rules for adding new combinations
+The system can't catch off-token combinations. Before introducing any color combination not in this table:
+1. Compute the ratio at https://webaim.org/resources/contrastchecker/
+2. If it fails AA, add it to the decorative-only list
+3. Update this file
+```
+
+**Rules:**
+- Compute ratios for EVERY foreground/background pair of palette tokens — don't skip combinations.
+- Mark each result against AA body and AA large explicitly. Don't just say "passes".
+- The `signal` color often fails on `ground` — that's expected. Flag it as decorative-only with explicit usage rules.
+- The focus-ring section is mandatory. Inaccessible focus management is the single most common a11y failure.
+
+---
+
+## 10. `applications.html`
+
+A single self-contained HTML page rendering the system on **4 real surfaces**. Every value is a token reference (`var(--space-4)`, `var(--font-body)`, `var(--token-name)`) — no inline hex, no inline px. If a surface needs something the tokens don't provide, the system is incomplete; extend the tokens, don't bypass them.
+
+**Surfaces (all four required):**
+
+1. **Website hero** — full-width section with masthead nav, hero headline (uses display type), subhead (body lead), primary CTA. Tests: type scale, container width, signal color in CTA, focus-ring visibility.
+2. **Podcast cover art / square 1:1** — 1024×1024 square (rendered at scale to fit page). Wordmark or monogram, episode/series title, optional guest name, optional issue number. Tests: monogram legibility, palette at large scale, type at extreme size.
+3. **Social post / 4:5** — quote-card format. One pulled quote in display type, attribution, brand mark in corner. Tests: voice + type composing into a shareable artifact.
+4. **Email header** — wide narrow strip (e.g., 600×120). Brand name on left, optional issue/date on right, signal-color rule beneath. Tests: brand identification at small vertical space.
+
+**Layout:**
+The page stacks the 4 surfaces vertically, each in its own section with a section label, the surface itself rendered at correct aspect ratio (`aspect-ratio: 16/9`, `1/1`, `4/5`, `5/1`), and a one-line caption noting which tokens it exercises.
+
+**Rules:**
+- Inline the token values (color/spacing/font CSS custom properties) at the top of the `<style>` block — do NOT `@import` `space.css`. The file must work when double-clicked from a file manager (some browsers block cross-origin `@import` from `file://`). Tokens here are a snapshot, regenerated whenever `palette.json` / `space.css` change.
+- The first lines of the `<style>` block must be a header comment naming the file as a snapshot:
+  ```css
+  /* ============================================================
+     applications.html — token SNAPSHOT, generated {YYYY-MM-DD}
+     Tokens below are copied from palette.json + type.css + space.css
+     at generation time. If you edit a token in those files, re-run
+     /brand-system → Refine to regenerate this file. Do not hand-edit.
+     ============================================================ */
+  ```
+- Every color: `var(--token-name)` from the inlined snapshot. No raw hex elsewhere in the file.
+- Every spacing: `var(--space-N)`. No fixed px.
+- Every font: `var(--font-display | --font-body | --font-mono)`. No font-family overrides.
+- The 4 surfaces are non-negotiable. If a brand truly doesn't have one (e.g., no podcast → swap cover art for product card), substitute with the nearest analog and note the swap.
+
+---
+
 ## Quality gate before delivery
 
 Before opening the moodboard, verify:
@@ -330,12 +541,20 @@ Before opening the moodboard, verify:
 - [ ] `palette.json` includes a `signal` color with real personality (not generic blue)
 - [ ] `type.css` uses `clamp()` for every size, no fixed px
 - [ ] `type.css` imports fonts from Google Fonts or Fontshare (not system fonts)
+- [ ] `space.css` has 8-10 step spacing scale, all `clamp()`-wrapped
+- [ ] `space.css` defines `--radius-sm/md/lg` consistent with the direction's personality
+- [ ] `logo.md` defines lockup, clear-space (in cap-heights), minimum size, monogram fallback, color usage, and 5+ don'ts
 - [ ] `tone.md` has 3-5 brand-specific voice attributes, 5+ we-are/we-are-not pairs, 10 do + 10 don't sentences (with reasons)
 - [ ] `tone.md` rejects every word in the banned list
 - [ ] `imagery.md` has 8-10 reference prompts, each `subject — light — material` triplet
 - [ ] `imagery.md` has 5+ "do not depict" specifics
+- [ ] `accessibility.md` has computed contrast ratios for EVERY text-on-background combination
+- [ ] `accessibility.md` flags decorative-only colors with explicit usage rules
+- [ ] `accessibility.md` defines a focus-ring spec
 - [ ] `moodboard.html` opens, fonts load, palette renders, no broken layout at 1280×720
-- [ ] `README.md` names the brand, the direction, the date, and what's in each file
+- [ ] `applications.html` renders 4 surfaces (hero, cover, social, email) using only system tokens
+- [ ] `applications.html` has zero inline hex codes, zero inline px values, zero off-system fonts
+- [ ] `README.md` names the brand, the direction, the date, the accessibility result, and what's in each file
 - [ ] Folder is at the requested path (default `./brand-system/`)
 
 If any item fails, fix before delivery.
