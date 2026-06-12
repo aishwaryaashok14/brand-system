@@ -1,0 +1,126 @@
+/* ============================================================
+   The Founder's Foyer — Typography
+   Direction: The Speculative
+   Display: JetBrains Mono — 700/800 (mono-as-display, lab-notebook)
+   Body:    Manrope — 400/500/600 (humanist sans, quiet)
+   Mono:    JetBrains Mono — 400 (inline code, captions)
+
+   Note on tracking: JetBrains Mono is monospaced — its fixed
+   advance width IS the lab-notebook register. Tracking is kept
+   to a whisper (-0.02em max) so the grid survives. Do not
+   tighten further; at display sizes glyphs will collide and
+   the mono rhythm dies.
+
+   Note on italics: Manrope ships no italic cut. Synthesized
+   obliques are off-system. For asides and emphasis, use .aside
+   (mono in brackets) or .em-note (cobalt mono) instead.
+   ============================================================ */
+
+@import url('./palette.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-display: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
+    --font-body:    'Manrope', system-ui, -apple-system, sans-serif;
+    --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+    /* Modular scale — rem + vw middle terms so user font-size
+       preferences and browser zoom still scale the text (WCAG 1.4.4) */
+    --fs-display: clamp(2.5rem, 1.8rem + 3.5vw, 5rem);
+    --fs-h1:      clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+    --fs-h2:      clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+    --fs-h3:      clamp(1.25rem, 1.1rem + 0.75vw, 1.625rem);
+    --fs-body:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    --fs-small:   clamp(0.8125rem, 0.79rem + 0.15vw, 0.875rem);
+    --fs-caption: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+
+    /* Line height */
+    --lh-tight: 0.95;   /* display only */
+    --lh-snug:  1.15;   /* headings */
+    --lh-body:  1.6;    /* body */
+    --lh-loose: 1.7;    /* long-form */
+
+    /* Tracking — display whisper-tight, labels open */
+    --tracking-display: -0.02em;
+    --tracking-label:   0.18em;
+}
+
+.display {
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    font-weight: 700;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+}
+
+.h1 {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    line-height: var(--lh-snug);
+    letter-spacing: -0.015em;
+}
+
+.h2 {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    line-height: var(--lh-snug);
+    letter-spacing: -0.01em;
+}
+
+.h3 {
+    font-family: var(--font-body);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+}
+
+.body {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: var(--lh-body);
+}
+
+.body-lead {
+    font-size: calc(var(--fs-body) * 1.15);
+    line-height: var(--lh-loose);
+}
+
+.caption {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+}
+
+.code {
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+    background: rgba(26, 122, 82, 0.08);   /* signal-deep @ 8% */
+    color: var(--signal-deep);             /* 4.7:1 on ground — passes body AA */
+    padding: 0.05em 0.35em;
+    border-radius: 2px;
+}
+
+/* The italic replacement — Manrope has no italic cut, so asides
+   are set in mono inside brackets instead. Matches the voice
+   system's "(n=1, but…)" sentence shape. */
+.aside {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--ink-soft);
+}
+.aside::before { content: '('; }
+.aside::after  { content: ')'; }
+
+/* Footnote-style emphasis matches the direction's footnote-as-decoration vibe */
+.footnote {
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    vertical-align: super;
+    color: var(--cobalt);
+    margin-left: 0.15em;
+}

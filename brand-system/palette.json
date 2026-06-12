@@ -1,0 +1,72 @@
+{
+  "$description": "The Founder's Foyer — color tokens. Direction: The Speculative. W3C DTCG format ($value/$type) — loads directly into Style Dictionary v4+, Tokens Studio, or any DTCG-aware tool. CSS emission lives in palette.css; keep the two in sync.",
+  "brand": {
+    "$description": "Brand metadata (non-token).",
+    "name": { "$type": "string", "$value": "The Founder's Foyer" },
+    "direction": { "$type": "string", "$value": "The Speculative" },
+    "version": { "$type": "string", "$value": "1.1" }
+  },
+  "color": {
+    "ground": {
+      "$type": "color",
+      "$value": "#f6f1e3",
+      "$description": "Page background — parchment, warm but cool. The page of a lab notebook.",
+      "$extensions": { "foyer.usage": "html, body, page surfaces, default card background" }
+    },
+    "ink": {
+      "$type": "color",
+      "$value": "#15171a",
+      "$description": "Primary text and structural strokes — off-black, never pure black.",
+      "$extensions": { "foyer.usage": "body copy, borders, icons, headings, dark surfaces" }
+    },
+    "ink-soft": {
+      "$type": "color",
+      "$value": "#6c6e74",
+      "$description": "Secondary text on LIGHT surfaces only — fails AA on ink (3.5:1) and for small text on quiet (3.4:1).",
+      "$extensions": { "foyer.usage": "timestamps, footnotes, section labels, metadata — on ground only" }
+    },
+    "signal": {
+      "$type": "color",
+      "$value": "#4ad295",
+      "$description": "Circuit-green, bright — the brand accent ON DARK SURFACES. 9.4:1 on ink. Decorative-only on light surfaces (1.7:1 on ground). For the same job on light surfaces, use signal-deep.",
+      "$extensions": { "foyer.usage": "links, cursors, focus rings, episode numbers — on ink or neutral-700+ only; decorative shapes and large icons on light" }
+    },
+    "signal-deep": {
+      "$type": "color",
+      "$value": "#1a7a52",
+      "$description": "Circuit-green, deep — the brand accent ON LIGHT SURFACES. 4.7:1 on ground (body AA). The two greens are one idea rendered for two surfaces; never use the bright one for text on light.",
+      "$extensions": { "foyer.usage": "links, labels, code text, focus rings, cursor accents on ground/quiet; filled CTA background with ground text (4.7:1)" }
+    },
+    "cobalt": {
+      "$type": "color",
+      "$value": "#2a4cd0",
+      "$description": "Second accent — inline notation, footnote markers, citation chrome. 6.1:1 on ground, 4.6:1 on quiet. Never on dark (2.6:1 on ink).",
+      "$extensions": { "foyer.usage": "em-style emphasis, footnote markers, blockquote rules, hyperlink underline color on ground" }
+    },
+    "rose": {
+      "$type": "color",
+      "$value": "#c97a8b",
+      "$description": "Warm counter — softens the cool palette, used sparingly. Decorative on light (2.8:1 on ground); text-safe on ink (5.7:1).",
+      "$extensions": { "foyer.usage": "tags (with ink text), warm-context labels on dark, photographic tints — never body text on ground" }
+    },
+    "quiet": {
+      "$type": "color",
+      "$value": "#d8d2c4",
+      "$description": "Supporting tone — surfaces that recede from ground. Identical to neutral-200 by design; it sits on the scale.",
+      "$extensions": { "foyer.usage": "card backgrounds, dividers, hover backgrounds, code blocks, secondary text on ink (11.9:1)" }
+    }
+  },
+  "neutral": {
+    "$description": "Warm at the light end (parchment-derived), cool at the dark end (ink-derived). The temperature crossover sits between 400 and 500, smoothed through near-neutral steps so no seam shows in a ramp. Use 300-400 sparingly; the system favors high contrast.",
+    "50":  { "$type": "color", "$value": "#fcfaf2" },
+    "100": { "$type": "color", "$value": "#f6f1e3", "$description": "= color.ground" },
+    "200": { "$type": "color", "$value": "#d8d2c4", "$description": "= color.quiet" },
+    "300": { "$type": "color", "$value": "#b3ad9e" },
+    "400": { "$type": "color", "$value": "#8d8a80", "$description": "transitional — warmth fading toward neutral" },
+    "500": { "$type": "color", "$value": "#6c6e74", "$description": "= color.ink-soft" },
+    "600": { "$type": "color", "$value": "#4d4f56" },
+    "700": { "$type": "color", "$value": "#34363c" },
+    "800": { "$type": "color", "$value": "#21232a" },
+    "900": { "$type": "color", "$value": "#15171a", "$description": "= color.ink" }
+  }
+}

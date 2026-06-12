@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Founder's Foyer — Brand System Moodboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Palette tokens (palette.json) */
+  --ground:      #f6f1e3;
+  --ink:         #15171a;
+  --ink-soft:    #6c6e74;
+  --signal:      #4ad295;
+  --signal-deep: #1a7a52;
+  --cobalt:      #2a4cd0;
+  --rose:        #c97a8b;
+  --quiet:       #d8d2c4;
+
+  /* Type tokens (type.css) */
+  --font-display: 'JetBrains Mono', ui-monospace, monospace;
+  --font-body:    'Manrope', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-display: clamp(2.5rem, 6vw, 5rem);
+  --fs-h2:      clamp(1.5rem, 3vw, 2.25rem);
+  --fs-body:    clamp(1rem, 1.15vw, 1.125rem);
+  --fs-small:   clamp(0.8125rem, 0.95vw, 0.875rem);
+  --fs-mono:    clamp(0.75rem, 0.85vw, 0.8125rem);
+
+  /* Space tokens (space.css) */
+  --gutter:      clamp(1.5rem, 3vw, 2.5rem);
+  --section-gap: clamp(2.5rem, 6vw, 5rem);
+}
+
+html, body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    linear-gradient(to right, rgba(21,23,26,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(21,23,26,0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+body { padding: var(--gutter); min-height: 100vh; }
+
+.moodboard {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: var(--section-gap);
+}
+
+.section { display: flex; flex-direction: column; gap: var(--gutter); }
+
+.section-label {
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+.section-label::before { content: '§ '; color: var(--signal-deep); }
+
+/* === MASTHEAD === */
+.masthead {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  padding-bottom: var(--gutter);
+  border-bottom: 1px dashed var(--ink);
+}
+.masthead .brand-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: 700;
+  line-height: 0.95; letter-spacing: -0.02em;
+}
+.masthead .one-liner {
+  font-family: var(--font-body);
+  font-size: var(--fs-h2); font-weight: 400;
+  color: var(--ink-soft);
+  max-width: 50ch; line-height: 1.3;
+  margin-top: 0.5rem;
+}
+.masthead .meta {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  margin-top: var(--gutter);
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+/* === PALETTE === */
+.palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  border: 1px solid var(--ink);
+}
+.swatch {
+  aspect-ratio: 1 / 1.2;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0.75rem; color: var(--ink);
+  border-right: 1px solid var(--ink);
+  background: var(--swatch-color, #fff);
+}
+.swatch:last-child { border-right: none; }
+.swatch.dark { color: var(--ground); }
+.swatch .name {
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.swatch .hex {
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  margin-top: 0.25rem; opacity: 0.85;
+}
+
+/* === SPECIMEN === */
+.specimen { display: grid; grid-template-columns: 1fr; gap: var(--gutter); }
+@media (min-width: 720px) { .specimen { grid-template-columns: 1.2fr 1fr; } }
+.specimen .display-sample {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 800;
+  line-height: 0.9; letter-spacing: -0.02em;
+}
+.specimen .display-sample::after {
+  content: '_'; color: var(--signal-deep);
+  animation: blink 1.2s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+.specimen .body-sample {
+  font-family: var(--font-body);
+  font-size: var(--fs-body); line-height: 1.6;
+  max-width: 42ch;
+}
+.specimen .body-sample em {
+  font-family: var(--font-mono);
+  color: var(--cobalt); font-style: normal;
+  font-size: 0.9em;
+  background: rgba(42,76,208,0.08);
+  padding: 0.05em 0.3em;
+}
+.specimen .pair-meta {
+  margin-top: 1rem;
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+/* === VOICE === */
+.voice {
+  background: var(--ground);
+  padding: var(--gutter);
+  border: 1px solid var(--ink);
+  border-left: 4px solid var(--signal-deep);
+  position: relative;
+}
+.voice::before {
+  content: 'hypothesis →';
+  position: absolute; top: -10px; left: var(--gutter);
+  background: var(--ground); padding: 0 0.5rem;
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  color: var(--signal-deep); letter-spacing: 0.12em;
+}
+.voice .tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700; line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+.voice .body-copy p {
+  font-family: var(--font-body);
+  font-size: var(--fs-body); line-height: 1.6;
+  max-width: 60ch;
+}
+.voice .body-copy p + p { margin-top: 0.6em; }
+
+/* === IMAGERY === */
+.imagery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+.ref-card {
+  background: var(--ground); padding: var(--gutter);
+  display: flex; flex-direction: column; gap: 0.75rem;
+  min-height: 200px; position: relative;
+}
+.ref-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 4px;
+  background: var(--ref-anchor, var(--signal-deep));
+}
+.ref-card .ref-num {
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  color: var(--ink-soft); letter-spacing: 0.12em;
+}
+.ref-card .ref-num::before { content: 'ref/'; color: var(--signal-deep); }
+.ref-card .ref-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.ref-card .ref-scene {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  line-height: 1.45;
+}
+.ref-card .ref-anchor-label {
+  margin-top: auto;
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+/* === MATERIALS === */
+.materials { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--ink);
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--ground);
+}
+.chip::before { content: '['; color: var(--signal-deep); margin-right: 0.2em; }
+.chip::after  { content: ']'; color: var(--signal-deep); margin-left: 0.2em; }
+
+/* === FOOTER === */
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+  padding-top: var(--gutter);
+  border-top: 1px dashed var(--ink);
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+.badge {
+  border: 1px solid var(--ink);
+  padding: 0.4rem 0.75rem; color: var(--ground);
+  background: var(--signal-deep);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="moodboard">
+
+  <!-- === MASTHEAD === -->
+  <header class="masthead">
+    <div class="section-label">brand system · v1.1</div>
+    <h1 class="brand-name">the founder&rsquo;s<br>foyer</h1>
+    <p class="one-liner">A podcast for early-stage builders — hallway conversations framed as hypotheses, not conclusions.</p>
+    <div class="meta">
+      <span>Direction · The Speculative</span>
+      <span>Revised · 2026.06.11</span>
+    </div>
+  </header>
+
+  <!-- === PALETTE (8 tokens) === -->
+  <section class="section">
+    <div class="section-label">palette · 8 tokens · see palette.json</div>
+    <div class="palette">
+      <div class="swatch" style="--swatch-color: #f6f1e3;">
+        <span class="name">Ground</span><span class="hex">#f6f1e3</span>
+      </div>
+      <div class="swatch" style="--swatch-color: #d8d2c4;">
+        <span class="name">Quiet</span><span class="hex">#d8d2c4</span>
+      </div>
+      <div class="swatch dark" style="--swatch-color: #4ad295;">
+        <span class="name">Signal</span><span class="hex">#4ad295</span>
+      </div>
+      <div class="swatch dark" style="--swatch-color: #1a7a52;">
+        <span class="name">Signal-deep</span><span class="hex">#1a7a52</span>
+      </div>
+      <div class="swatch dark" style="--swatch-color: #2a4cd0;">
+        <span class="name">Cobalt</span><span class="hex">#2a4cd0</span>
+      </div>
+      <div class="swatch dark" style="--swatch-color: #c97a8b;">
+        <span class="name">Rose</span><span class="hex">#c97a8b</span>
+      </div>
+      <div class="swatch dark" style="--swatch-color: #6c6e74;">
+        <span class="name">Ink-soft</span><span class="hex">#6c6e74</span>
+      </div>
+      <div class="swatch dark" style="--swatch-color: #15171a;">
+        <span class="name">Ink</span><span class="hex">#15171a</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- === TYPE === -->
+  <section class="section">
+    <div class="section-label">typography · jetbrains mono + manrope · see type.css</div>
+    <div class="specimen">
+      <div>
+        <div class="display-sample">foyer</div>
+      </div>
+      <div>
+        <p class="body-sample">What if the next 1,000 SaaS products aren&rsquo;t built by full-stack teams, but by single operators with three AI agents? <em>n=1</em>, but the foyer is full of them. Forty-five minutes. Lightly edited. No conclusions.</p>
+        <div class="pair-meta">Display · JetBrains Mono 700/800 — Body · Manrope 400/500/600</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === VOICE === -->
+  <section class="section">
+    <div class="section-label">voice · sample copy · see tone.md</div>
+    <div class="voice">
+      <h2 class="tagline">Raw ideas. Thinking out loud.</h2>
+      <div class="body-copy">
+        <p>This week, Aishwarya and a guest sit with a question worth taking seriously. Not &ldquo;what should every founder do?&rdquo; but &ldquo;what if this thing we all assume is actually wrong?&rdquo;</p>
+        <p>You&rsquo;ll leave with more questions than answers. That&rsquo;s the point.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- === IMAGERY (10 references) === -->
+  <section class="section">
+    <div class="section-label">imagery · 10 reference scenes · see imagery.md</div>
+    <div class="imagery">
+      <div class="ref-card" style="--ref-anchor: #4ad295;">
+        <span class="ref-num">01</span>
+        <span class="ref-title">Whiteboard with arrows</span>
+        <p class="ref-scene">Whiteboard half-filled with arrows and lambda calculus, eraser smudge in the corner — flat fluorescent overhead at 9pm — graphite, dry-erase residue, fingerprint smudge.</p>
+        <span class="ref-anchor-label">Anchor · Signal</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #2a4cd0;">
+        <span class="ref-num">02</span>
+        <span class="ref-title">Kindle + terminal</span>
+        <p class="ref-scene">Kindle propped against a coffee mug, terminal window glowing on a laptop screen behind — desk lamp from the right — black plastic, char-marked paper, faint green from the cursor.</p>
+        <span class="ref-anchor-label">Anchor · Cobalt</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #2a4cd0;">
+        <span class="ref-num">03</span>
+        <span class="ref-title">Topographic vellum</span>
+        <p class="ref-scene">Topographic contour map printed on tracing paper, three sheets stacked with a paperclip — north window, blue hour — vellum, indigo ink, brass paperclip.</p>
+        <span class="ref-anchor-label">Anchor · Cobalt</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #4ad295;">
+        <span class="ref-num">04</span>
+        <span class="ref-title">Disassembled pointer</span>
+        <p class="ref-scene">Broken laser pointer disassembled on a pad of grid paper, components labeled in pencil — workshop bulb overhead — copper trace, lithium cell, AA grid paper.</p>
+        <span class="ref-anchor-label">Anchor · Signal</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #c97a8b;">
+        <span class="ref-num">05</span>
+        <span class="ref-title">Foyer threshold</span>
+        <p class="ref-scene">Architectural detail of a foyer — door frame, threshold, stair runner — at 6pm with last light from a window further down the hall — oak wainscot, brass strike plate.</p>
+        <span class="ref-anchor-label">Anchor · Rose</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #1a7a52;">
+        <span class="ref-num">06</span>
+        <span class="ref-title">Dog-eared book</span>
+        <p class="ref-scene">Open hardback annotated in pencil, half-empty cup of tea beside it — overhead reading lamp from upper left — foxed paper, ceramic glaze, graphite on margin.</p>
+        <span class="ref-anchor-label">Anchor · Signal-deep</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #4ad295;">
+        <span class="ref-num">07</span>
+        <span class="ref-title">Chalk diagram</span>
+        <p class="ref-scene">Chalkboard with one circle, three arrows, and the word &ldquo;why?&rdquo; in the corner, eraser dust at the base — single workshop bulb — chalk, slate, residual dust.</p>
+        <span class="ref-anchor-label">Anchor · Signal</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #6c6e74;">
+        <span class="ref-num">08</span>
+        <span class="ref-title">Microphone closeup</span>
+        <p class="ref-scene">Cardioid mic on a desk arm, foam pop filter visible, blank notepad open behind — desk lamp from the right, indirect — matte black, foam grey, manila card.</p>
+        <span class="ref-anchor-label">Anchor · Ink-soft</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #2a4cd0;">
+        <span class="ref-num">09</span>
+        <span class="ref-title">Stack of theses</span>
+        <p class="ref-scene">Three printed essays bound with a black binder clip, top sheet annotated in indigo — late afternoon, west window — copy paper, indigo ink, faint coffee ring.</p>
+        <span class="ref-anchor-label">Anchor · Cobalt</span>
+      </div>
+      <div class="ref-card" style="--ref-anchor: #2a4cd0;">
+        <span class="ref-num">10</span>
+        <span class="ref-title">Coffee + grid paper</span>
+        <p class="ref-scene">Coffee mug on a sheet of A4 grid paper, half-finished diagram visible underneath, pen across the top — overhead lamp — porcelain, A4 grid, blue ballpoint, faint steam.</p>
+        <span class="ref-anchor-label">Anchor · Cobalt</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- === MATERIALS === -->
+  <section class="section">
+    <div class="section-label">materials · texture vocabulary · see imagery.md</div>
+    <div class="materials">
+      <span class="chip">vellum</span>
+      <span class="chip">copper trace</span>
+      <span class="chip">indigo ink</span>
+      <span class="chip">matte aluminum</span>
+      <span class="chip">dry-erase residue</span>
+      <span class="chip">grid paper</span>
+      <span class="chip">fluorescent tube</span>
+      <span class="chip">oak grain</span>
+      <span class="chip">coated paper</span>
+      <span class="chip">brass</span>
+      <span class="chip">salt-marked leather</span>
+      <span class="chip">graphite</span>
+    </div>
+  </section>
+
+  <!-- === FOOTER === -->
+  <footer class="footer">
+    <span>The Founder&rsquo;s Foyer · brand system v1.1 · 2026.06.11</span>
+    <span class="badge">Direction · The Speculative</span>
+  </footer>
+
+</div>
+</body>
+</html>

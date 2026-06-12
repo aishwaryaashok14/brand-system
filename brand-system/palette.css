@@ -1,0 +1,33 @@
+/* ============================================================
+   The Founder's Foyer — Color Tokens
+   Source of truth: palette.json (this file is its CSS emission)
+   If you change a value here, change it in palette.json too.
+   ============================================================ */
+
+:root {
+    /* === SEMANTIC TOKENS === */
+    --ground:      #f6f1e3;  /* page background — parchment */
+    --ink:         #15171a;  /* primary text, structural strokes */
+    --ink-soft:    #6c6e74;  /* secondary text on light surfaces ONLY (fails on ink and quiet-small) */
+    --signal:      #4ad295;  /* circuit-green — DARK SURFACES ONLY for text; decorative on light */
+    --signal-deep: #1a7a52;  /* the working green on LIGHT surfaces — text-safe on ground (4.7:1), focus rings, code, labels */
+    --cobalt:      #2a4cd0;  /* second accent — notation, footnote markers, link underlines on light */
+    --rose:        #c97a8b;  /* warm counter — decorative on light, text-safe on ink (5.7:1) */
+    --quiet:       #d8d2c4;  /* receding surface — cards, dividers, code blocks; = neutral-200 */
+
+    /* === NEUTRAL SCALE ===
+       Warm at the light end (parchment-derived), cool at the dark end
+       (ink-derived). The temperature crossover happens between 400 and
+       500 — deliberate, documented, and smoothed through near-neutral
+       steps so no seam shows in a ramp. */
+    --neutral-50:  #fcfaf2;
+    --neutral-100: #f6f1e3;  /* = ground */
+    --neutral-200: #d8d2c4;  /* = quiet */
+    --neutral-300: #b3ad9e;
+    --neutral-400: #8d8a80;
+    --neutral-500: #6c6e74;  /* = ink-soft */
+    --neutral-600: #4d4f56;
+    --neutral-700: #34363c;
+    --neutral-800: #21232a;
+    --neutral-900: #15171a;  /* = ink */
+}

@@ -1,0 +1,126 @@
+/* ============================================================
+   The Founder's Foyer — Components & Interactive States
+   Cascades: palette.css → type.css → space.css → this file
+   Every state here uses a pair from accessibility.md's table.
+   ============================================================ */
+
+@import url('./space.css');
+
+/* === LINKS ===
+   On light: ink text, cobalt underline (the citation register).
+   On dark:  signal text, terminal-link register. */
+a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--cobalt);
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+}
+a:hover {
+    color: var(--cobalt);                  /* 6.1:1 on ground */
+    text-decoration-thickness: 2px;
+}
+a:active { color: var(--signal-deep); }    /* 4.7:1 on ground */
+a:visited { text-decoration-color: var(--ink-soft); }
+
+.on-dark a,
+[data-surface="dark"] a {
+    color: var(--signal);                  /* 9.4:1 on ink */
+    text-decoration-color: var(--signal);
+}
+.on-dark a:hover,
+[data-surface="dark"] a:hover {
+    color: var(--ground);                  /* 15.9:1 — lighten, terminal-style */
+    text-decoration-color: var(--ground);
+}
+
+/* === BUTTONS === */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* Primary — ink plate, ground text, blinking signal cursor */
+.btn-primary {
+    background: var(--ink);
+    color: var(--ground);                  /* 15.9:1 */
+}
+.btn-primary::after {
+    content: '_';
+    color: var(--signal);                  /* 9.4:1 on ink */
+    animation: blink var(--blink-duration) var(--blink-timing) infinite;
+}
+.btn-primary:hover { background: var(--neutral-700); }
+
+/* Call-to-listen — the one filled-green button. Deep green only:
+   ground on signal-deep = 4.7:1 (body AA). NEVER fill with bright signal
+   on light surfaces — ground on signal is 1.7:1. */
+.btn-listen {
+    background: var(--signal-deep);
+    color: var(--ground);
+}
+.btn-listen:hover { background: var(--ink); }
+
+/* Secondary — outline */
+.btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+}
+.btn-secondary:hover { background: var(--quiet); }
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* === CHIPS — square, bracketed, mono (the moodboard register) === */
+.chip {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-none);
+    background: var(--ground);
+}
+.chip::before { content: '['; color: var(--signal-deep); margin-right: 0.2em; }
+.chip::after  { content: ']'; color: var(--signal-deep); margin-left: 0.2em; }
+
+/* Status chip — the ONLY pill in the system (see --radius-pill) */
+.chip-status {
+    border-radius: var(--radius-pill);
+}
+.chip-status::before, .chip-status::after { content: none; }
+
+/* === TAGS — the rose use case: decorative fill, ink text (5.7:1) === */
+.tag {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    background: var(--rose);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-none);
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-primary::after { animation: none; }
+}
