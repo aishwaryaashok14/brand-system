@@ -11,7 +11,7 @@ Generate a complete brand tone & design system through short, focused Q&A and th
 
 1. **Show, Don't Tell** — Generate three rendered HTML moodboards, not abstract descriptions. People discover their brand by seeing it.
 2. **Short Questions** — Batch all discovery into one `AskUserQuestion` call (max 4 questions). Never interrogate.
-3. **Reference Collage, Not AI Slop** — Imagery is described as concrete reference scenes (subject, light, palette anchors). The user takes prompts to their own tool — we never auto-generate stock-looking visuals.
+3. **Reference Collage, Not AI Slop** — Imagery is described as concrete reference scenes (subject, light, palette anchors), never generic stock-looking visuals. By default the system *describes* imagery and hands the user ready-to-paste prompts. If they want real frames, **Phase 4.5** optionally renders them with the user's own Gemini key — a deliberate, opt-in step, never the default and never during discovery.
 4. **Distinctive Direction** — Avoid generic indigo gradients, Inter-on-white, "modern minimal nothing." Every direction must commit to a point of view.
 5. **Folder Deliverable** — Output is a `brand-system/` folder with portable artifacts (`palette.json`, `type.css`, `tone.md`, `imagery.md`, `moodboard.html`, `README.md`).
 
@@ -194,7 +194,7 @@ Each moodboard must contain, in this order:
    - "Concrete loading bay at 6am — overcast, blue hour edge — wet asphalt, sodium streetlight"
    - "Hands kneading rye dough — overhead window light — flour-dusted oak, linen apron"
    - "Lab notebook half-open — desk lamp from left — graphite, Manila card, copper coil"
-   - The card itself is a CSS-styled rectangle with the description inside, plus a thin colored bar tying it to the palette. **No image generation, no stock photos.**
+   - The card itself is a CSS-styled rectangle with the description inside, plus a thin colored bar tying it to the palette. **No image generation in previews, no stock photos** — the three directions stay text-described so they render instantly and cost nothing. (Rendering real frames is a separate opt-in step after delivery; see Phase 4.5.)
 6. **Texture/material descriptors** — 5-7 short phrases as a chip/pill row (e.g., "matte clay", "raw kraft", "wet glass", "warm tungsten", "graphite on bond")
 7. **Footer** — preset name + small "Direction A/B/C" badge
 
@@ -258,8 +258,34 @@ Required artifacts (every file uses the chosen direction):
 3. **Summarize** in 5-7 lines:
    - Folder location, direction name, token count, accessibility result (`X passes AA, Y decorative-only`)
    - One-line description of the voice
-   - One concrete next step (e.g., "drop `palette.json` into your design tool / paste prompts from `imagery.md` into your image-gen tool / use `applications.html` mockups as references for your dev team")
+   - One concrete next step (e.g., "drop `palette.json` into your design tool / paste prompts from `imagery.md` into your image-gen tool — or render them in one step via Phase 4.5 / use `applications.html` mockups as references for your dev team")
    - How to evolve: "Edit any token file then re-run /brand-system → Refine to rebuild the moodboard and applications"
+   - **Offer, don't assume:** mention that real reference frames can be rendered from `imagery.md` via Phase 4.5 if they have a Gemini key. Only run it if they opt in.
+
+---
+
+## Phase 4.5: Render Reference Frames (Optional · opt-in)
+
+The system is **described first** — `imagery.md` ships ready-to-paste reference prompts, and that text-first collage is the default deliverable (Principle #3). This phase is the optional close-the-loop step: render those prompts into real frames and compose them into one on-brand grid poster. It is **never automatic** — only run it when the user explicitly asks and has their own Gemini API key. Do not run it during discovery, previews, or folder generation.
+
+**Requirements (user-side):**
+- A Google Gemini API key in `.env` (`GEMINI_API_KEY=...`) — gitignored, never committed or printed. Get one at https://aistudio.google.com/apikey
+- `python3 -m pip install google-genai pillow`
+
+**Run** — the tool is brand-agnostic; it reads the brand name, palette, and prompts straight from the brand folder (`palette.json` + `imagery.md`):
+```bash
+python3 generate_moodboard.py 2                 # cheap test: first 2 frames, validate the look
+python3 generate_moodboard.py ./brand-system    # all frames + the composed grid poster
+python3 generate_moodboard.py --grid-only       # re-stitch the grid only, no API cost
+```
+
+**Output** → `<brand-folder>/moodboard-images/`:
+- `frames/NN-<slug>.jpg` — individual reference frames (gitignored, regenerable)
+- `moodboard-final.jpg` — the composed grid (frames + an auto-generated palette tile + a monogram tile, framed on the brand's `ink` / `ground` / `signal`)
+
+**Cohesion is enforced** by a shared house-style suffix appended to every prompt — one light source, muted film grade, fine grain, and a single accent drawn from the brand's own `signal` color, anchored to `ground` and `ink`. That shared treatment is what makes N separate scenes read as one visual language rather than N unrelated stock photos.
+
+**Caveats to surface to the user:** generated frames carry Google's SynthID watermark and are model output, not commissioned photography — they exist to *see the direction*, not necessarily to ship as final brand assets. Full setup and tuning detail lives in [IMAGEGEN.md](IMAGEGEN.md).
 
 ---
 
@@ -285,6 +311,8 @@ Make the change, regenerate only the affected file(s), update `moodboard.html` A
 | [TONE_PRESETS.md](TONE_PRESETS.md) | 10 curated brand directions with palette, type, voice, imagery cues | Phase 2 (direction picking) |
 | [moodboard-base.css](moodboard-base.css) | Mandatory CSS for moodboard previews — include in full | Phase 2 + Phase 3 (HTML generation) |
 | [OUTPUT_FORMAT.md](OUTPUT_FORMAT.md) | Schema + examples for every file in the `brand-system/` folder | Phase 3 (folder generation) |
+| [generate_moodboard.py](generate_moodboard.py) | Brand-agnostic Gemini renderer — turns any brand's `imagery.md` prompts into frames + a composed grid poster | Phase 4.5 (optional render) |
+| [IMAGEGEN.md](IMAGEGEN.md) | Setup + usage for the optional image-generation add-on | Phase 4.5 (optional render) |
 
 ---
 
@@ -301,11 +329,14 @@ The generated `applications.html` inlines its color/spacing/font tokens at the t
 ### 3. `tone.md` domain specificity is model-dependent
 The "Do say" / "Don't say" sentences are supposed to read like real product copy in the brand's domain (podcast, SaaS, agency, DTC, etc.). Today this works because the model picks up domain context from the brief and reference digest. There's no quality gate enforcing it. If a generated `tone.md` feels generic — full of "In this episode…" or "Our customers…" sentences that don't anchor on the actual brand — the brief was likely thin. **Mitigation:** Re-run Phase 1 with more domain-specific anchors in Question 4 ("references to share"), and consider adding 2-3 verbatim copy examples from real comparable brands in the user's space. A formal quality-gate check against domain vocabulary may be added in v2 if this fails frequently in practice.
 
+### 4. Rendered frames (Phase 4.5) are watermarked model output, not photography
+The optional renderer produces frames via Gemini, which carry Google's SynthID watermark and are AI-generated — useful for *seeing* a direction, not guaranteed to be ship-ready brand assets, and subject to the model's interpretation of the prompt. They also cost money per frame and require the user's own key. This is why rendering is opt-in and never the default: the described-reference collage in `imagery.md` remains the canonical, portable deliverable. **Mitigation:** Phase 4.5 surfaces these caveats; the `N`-frame cheap-test argument validates the look before a full run; and `imagery.md` prompts stay tool-agnostic so the user can take them to a photographer or any other generator.
+
 ---
 
 ## Anti-Patterns (Reject on Sight)
 
-- Generating images instead of describing reference scenes
+- Generating images *instead of* describing reference scenes during discovery, previews, or folder generation — the system is always described first. (Rendering real frames from `imagery.md` afterward is fine, but only via the opt-in Phase 4.5, only with the user's own key, and only when they ask.)
 - Asking more than 4 questions in discovery (batch into one `AskUserQuestion`)
 - Showing one direction instead of three (kills "show, don't tell")
 - Using system fonts or Inter/Roboto in any preview

@@ -1,0 +1,14 @@
+.DS_Store
+
+# Secrets — never commit
+.env
+.gemini_key
+
+# Python
+__pycache__/
+.venv/
+*.pyc
+
+# Generated reference frames (large, regenerable). The composed
+# moodboard-final.jpg is kept tracked on purpose.
+brand-system/moodboard-images/frames/
